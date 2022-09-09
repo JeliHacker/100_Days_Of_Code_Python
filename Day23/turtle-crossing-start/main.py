@@ -19,7 +19,9 @@ from scoreboard import Scoreboard
 screen = Screen()
 screen.setup(width=600, height=600)
 screen.tracer(0)
+screen.colormode(255)
 
+# Draw safe zone lines
 drawer = Turtle()
 drawer.penup()
 drawer.goto(-300, -250)
@@ -39,9 +41,27 @@ screen.listen()
 screen.onkey(player.moveUp, "Up")
 
 game_is_on = True
+count = 0
+collide_with_car = False
 while game_is_on:
     time.sleep(0.1)
+    if count % 6 == 0:
+        cars.generate_car()
+    cars.move()
 
     screen.update()
+
+    if player.ycor() > 260:
+        print("Wins!")
+        time.sleep(5)
+        player.goto((0, -280))
+
+    for car in cars.cars:
+        if player.distance(car) < 20:
+            collide_with_car = True
+            break
+    if collide_with_car:
+        game_is_on = False
+    count += 1
 
 screen.exitonclick()
