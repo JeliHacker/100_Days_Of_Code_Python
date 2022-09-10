@@ -64,4 +64,6 @@ while game_is_on:
         game_is_on = False
     count += 1
 
+
+
 screen.exitonclick()
