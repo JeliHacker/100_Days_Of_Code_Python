@@ -50,7 +50,7 @@ class QuizInterface:
             self.canvas.itemconfig(self.question_text, text=f"You've reached the end of the quiz! Your score was {self.quiz.score}/10.")
             self.true_button.config(state=DISABLED)
             self.false_button.config(state=DISABLED)
-            
+
     def guess_true(self):
         is_right = self.quiz.check_answer("True")
 
