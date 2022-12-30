@@ -5,6 +5,7 @@ import config
 OWM_Endpoint = "https://api.openweathermap.org/data/2.5/onecall"
 api_key = config.OWM_API_KEY
 account_sid = "AC0c1f13db0652fb5602c45ca64772c17d"
+# 1dd4291e59979ca82f3ff200ccc83c4f
 auth_token = config.AUTH_TOKEN
 
 # lat = 34.080292
