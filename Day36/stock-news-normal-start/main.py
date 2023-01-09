@@ -1,13 +1,27 @@
+import requests
+import config
+
 STOCK_NAME = "TSLA"
 COMPANY_NAME = "Tesla Inc"
 
 STOCK_ENDPOINT = "https://www.alphavantage.co/query"
 NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 
-    ## STEP 1: Use https://www.alphavantage.co/documentation/#daily
+STOCK_API_KEY = config.ALPHA_VANTAGE_API_KEY
+
+## STEP 1: Use https://www.alphavantage.co/documentation/#daily
 # When stock price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
 
-#TODO 1. - Get yesterday's closing stock price. Hint: You can perform list comprehensions on Python dictionaries. e.g. [new_value for (key, value) in dictionary.items()]
+    #TODO 1. - Get yesterday's closing stock price. Hint: You can perform list comprehensions on Python dictionaries. e.g. [new_value for (key, value) in dictionary.items()]
+stock_params = {
+    "function": "TIME_SERIES_DAILY",
+    "symbol": STOCK_NAME,
+    "apikey": STOCK_API_KEY,
+}
+
+response = requests.get(STOCK_ENDPOINT, params=stock_params)
+print(response.json())
+
 
 #TODO 2. - Get the day before yesterday's closing stock price
 
@@ -17,8 +31,8 @@ NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 
 #TODO 5. - If TODO4 percentage is greater than 5 then print("Get News").
 
-    ## STEP 2: https://newsapi.org/ 
-    # Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME. 
+## STEP 2: https://newsapi.org/
+# Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME.
 
 #TODO 6. - Instead of printing ("Get News"), use the News API to get articles related to the COMPANY_NAME.
 
