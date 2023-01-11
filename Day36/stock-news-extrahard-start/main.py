@@ -1,5 +1,7 @@
 import requests
 import config
+from twilio.rest import Client
+import os
 
 STOCK = "TSLA"
 COMPANY_NAME = "Tesla Inc"
@@ -39,16 +41,44 @@ url = (f'https://newsapi.org/v2/everything?'
        f'q={COMPANY_NAME}&'
        'from=2023-01-08&'
        'sortBy=popularity&'
-       'apiKey=f5c0f03099c14148939998f6d24e08da')
+       f'apiKey={NEWS_API_KEY}')
 
 response = requests.get(url)
 
 data = response.json()
-print(data)
-
+most_recent_articles = data['articles'][:3]
+print(most_recent_articles)
+titles_and_descriptions = [{"title": article["title"], "description": article["description"]} for article in most_recent_articles]
+print(titles_and_descriptions)
+print(len(titles_and_descriptions))
 
 ## STEP 3: Use https://www.twilio.com
 # Send a separate message with the percentage change and each article's title and description to your phone number.
+
+# print(os.environ.keys())
+# print(os.path.abspath('.env'))
+# print(os.environ.get('TWILIO_ACCOUNT_SID'))
+
+# account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
+# auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
+
+account_sid = config.TWILIO_ACCOUNT_SID
+auth_token = config.TWILIO_AUTH_TOKEN
+
+print(auth_token)
+client = Client(account_sid, auth_token)
+
+for article in titles_and_descriptions:
+    message_body = article["title"] + "\n" + article["description"]
+    message = client.messages.create(
+                                  body=message_body,
+                                  from_='+13149364762',
+                                  to=config.MY_PHONE_NUMBER
+                              )
+
+    print(message)
+    print(message.status)
+
 
 
 #Optional: Format the SMS message like this: 

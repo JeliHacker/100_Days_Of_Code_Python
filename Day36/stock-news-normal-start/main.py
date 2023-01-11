@@ -19,12 +19,16 @@ stock_params = {
     "apikey": STOCK_API_KEY,
 }
 
-response = requests.get(STOCK_ENDPOINT, params=stock_params)
-print(response.json())
-
-
 #TODO 2. - Get the day before yesterday's closing stock price
+response = requests.get(STOCK_ENDPOINT, params=stock_params)
+data = response.json()["Time Series (Daily)"]
+data_list = [value for (key, value) in data.items()]
+yesterday_data = data_list[0]
+yesterday_closing_price = yesterday_data["4. close"]
 
+# Get the day before yesterday's closing stock price
+day_before_yesterday_data = data_list[1]
+day_before_yesterday_closing_price = day_before_yesterday_data["4. close"]
 #TODO 3. - Find the positive difference between 1 and 2. e.g. 40 - 20 = -20, but the positive difference is 20. Hint: https://www.w3schools.com/python/ref_func_abs.asp
 
 #TODO 4. - Work out the percentage difference in price between closing price yesterday and closing price the day before yesterday.
