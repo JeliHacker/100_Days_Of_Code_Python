@@ -25,7 +25,21 @@ yesterday_data = data["Time Series (Daily)"][second_most_recent_close_date]
 close = float(today_data["4. close"])
 yesterday_close = float(yesterday_data["4. close"])
 
+updown = ""
+updown_dict = {
+    "Up": "🔺",
+    "Down": "👇",
+    "Flat": "😐"
+}
+percentage_change = ((close - yesterday_close) / yesterday_close) * 100
+if percentage_change > 0:
+    updown = "Up"
+elif percentage_change < 0:
+    updown = "Down"
+else:
+    updown = "Flat"
 percentage_change = abs(((close - yesterday_close) / yesterday_close) * 100)
+
 print(close)
 print(yesterday_close)
 print(percentage_change)
@@ -48,7 +62,8 @@ response = requests.get(url)
 data = response.json()
 most_recent_articles = data['articles'][:3]
 print(most_recent_articles)
-titles_and_descriptions = [{"title": article["title"], "description": article["description"]} for article in most_recent_articles]
+titles_and_descriptions = [{"title": article["title"], "description": article["description"]} for article in
+                           most_recent_articles]
 print(titles_and_descriptions)
 print(len(titles_and_descriptions))
 
@@ -59,29 +74,32 @@ print(len(titles_and_descriptions))
 # print(os.path.abspath('.env'))
 # print(os.environ.get('TWILIO_ACCOUNT_SID'))
 
-# account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
-# auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
+account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
+auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
 
-account_sid = config.TWILIO_ACCOUNT_SID
-auth_token = config.TWILIO_AUTH_TOKEN
+# account_sid = config.TWILIO_ACCOUNT_SID
+# auth_token = config.TWILIO_AUTH_TOKEN
 
-print(auth_token)
+# print(account_sid1, account_sid)
+# print(auth_token1, auth_token)
+
 client = Client(account_sid, auth_token)
 
 for article in titles_and_descriptions:
     message_body = article["title"] + "\n" + article["description"]
+    message_body = f"{STOCK}: {updown_dict[updown]}{round(percentage_change, 2)}%, {round(close, 2)}\n" \
+                   f"Headline: {article['title']}" \
+                   f"Brief: {article['description']}"
     message = client.messages.create(
-                                  body=message_body,
-                                  from_='+13149364762',
-                                  to=config.MY_PHONE_NUMBER
-                              )
+        body=message_body,
+        from_='+13149364762',
+        to=config.MY_PHONE_NUMBER
+    )
 
     print(message)
     print(message.status)
 
-
-
-#Optional: Format the SMS message like this: 
+# Optional: Format the SMS message like this:
 """
 TSLA: 🔺2%
 Headline: Were Hedge Funds Right About Piling Into Tesla Inc. (TSLA)?. 
@@ -91,4 +109,3 @@ or
 Headline: Were Hedge Funds Right About Piling Into Tesla Inc. (TSLA)?. 
 Brief: We at Insider Monkey have gone over 821 13F filings that hedge funds and prominent investors are required to file by the SEC The 13F filings show the funds' and investors' portfolio positions as of March 31st, near the height of the coronavirus market crash.
 """
-
