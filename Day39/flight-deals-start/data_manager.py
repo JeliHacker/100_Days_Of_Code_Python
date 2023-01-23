@@ -2,8 +2,6 @@ import requests
 import os
 
 
-def get_rows():
-    print("Here are the rows:")
 
 class DataManager:
     #This class is responsible for talking to the Google Sheet.
@@ -14,4 +12,9 @@ class DataManager:
     }
 
     get_response = requests.get(url=url, headers=headers)
-    print(get_response.json()["prices"])
+    prices = get_response.json()["prices"]
+
+    def get_rows(self):
+        get_response = requests.get(url=self.url, headers=self.headers)
+        prices = get_response.json()["prices"]
+        return prices
