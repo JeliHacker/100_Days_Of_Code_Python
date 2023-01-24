@@ -11,3 +11,5 @@ sheet_rows = dataManager.get_rows()
 flightSearch = FlightSearch()
 
 flightSearch.set_sheet_rows(sheet_rows)
+
+flightSearch.search_all_cities()
