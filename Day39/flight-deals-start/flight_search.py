@@ -1,6 +1,6 @@
 import os
 import requests
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from notification_manager import NotificationManager
 
 class FlightSearch():
@@ -68,7 +68,9 @@ class FlightSearch():
             print(f"to = {flight['cityTo']}, {flight['flyTo']}")
             date1 = flight['local_departure']
             print(f"departure = {flight['local_departure']}")
-            self.notification.alert_deal(new_price, cityFrom, cityTo, date1)
+            date1 = datetime.strptime(date1, "%Y-%m-%dT%H:%M:%S.%fZ")
+            readable_time = date1.strftime("%B %d, %Y %H:%M:%S %p")
+            self.notification.alert_deal(new_price, cityFrom, cityTo, readable_time)
 
     def search_first_city(self):
         if len(self.sheet_rows) > 0:
