@@ -1,10 +1,13 @@
 import os
 import requests
 from datetime import datetime, timedelta, date
+from notification_manager import NotificationManager
 
 class FlightSearch():
     #This class is responsible for talking to the Flight Search API.
     # Tequila by Kiwi
+
+    notification = NotificationManager()
 
     sheet_rows = None
 
@@ -37,7 +40,6 @@ class FlightSearch():
         "curr": "USD",
         "price_from": 0,
         "price_to": 330,
-
     }
 
     url = "https://api.tequila.kiwi.com/v2/search"
@@ -48,13 +50,25 @@ class FlightSearch():
 
     def set_sheet_rows(self, new_sheet_rows):
         self.sheet_rows = new_sheet_rows
-        print(self.sheet_rows)
+        # print(self.sheet_rows)
 
     def search_for_flights(self, city, price):
         self.params["fly_to"] = city
         self.params["price_to"] = price
         response = requests.get(url=self.url, headers=self.headers, params=self.params)
-        print(f"status = {response.status_code}")
+        # print(f"status = {response.status_code}")
+        if len(response.json()["data"]) > 0:
+            flight = response.json()["data"][0]
+            print(flight)
+            new_price = flight['price']
+            print(f"price = {flight['price']}")
+            cityFrom = flight['cityFrom'] + "-" + flight['flyFrom']
+            print(f"from = {flight['cityFrom']}, {flight['flyFrom']}")
+            cityTo = flight['cityTo'] + "-" + flight['flyTo']
+            print(f"to = {flight['cityTo']}, {flight['flyTo']}")
+            date1 = flight['local_departure']
+            print(f"departure = {flight['local_departure']}")
+            self.notification.alert_deal(new_price, cityFrom, cityTo, date1)
 
     def search_first_city(self):
         if len(self.sheet_rows) > 0:
@@ -65,7 +79,7 @@ class FlightSearch():
         for row in self.sheet_rows:
             print("row = " + str(row))
             row_city = row['iataCode']
-            print(f"city = {row_city}")
+            # print(f"city = {row_city}")
             row_price = row['lowestPrice']
-            print(f"price = {row_price}")
+            # print(f"price = {row_price}")
             self.search_for_flights(row_city, row_price)
