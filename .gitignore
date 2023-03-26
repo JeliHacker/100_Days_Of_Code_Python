@@ -3,3 +3,4 @@ config.py
 */*/config.py
 Day35/rain_alert/__pycache__/config.cpython-310.pyc
 config.cpython-310.pyc
+.DS_Store
