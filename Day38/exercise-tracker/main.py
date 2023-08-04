@@ -50,7 +50,7 @@ json = {
         "time": time,
         "exercise": exercise,
         "duration": duration,
-        "calories": calories,
+        "calories": calories,`
     }
 }
 
